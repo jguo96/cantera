@@ -9,7 +9,8 @@ samples = [
     ('kinetics1', 'kinetics1', ['cpp']),
     ('NASA_coeffs', 'NASA_coeffs', ['cpp']),
     ('rankine', 'rankine', ['cpp']),
-    ('LiC6_electrode', 'LiC6_electrode', ['cpp'])
+    ('LiC6_electrode', 'LiC6_electrode', ['cpp']),
+    ('qss_ignition', 'qss_ignition', ['cpp'])
 ]
 
 for subdir, name, extensions in samples:
