@@ -1,7 +1,7 @@
 *******
 About linear-QSSA release
 *******
-This release includes a modification of Cantera Version 2.3.0 (stable) to include the capability of linear quasi-steady-state approximation for gas-phase kinetics. One sample for the usage of linear-QSSA model is included in ..code:`samples/cxx/qss_ignition/`. The corresponding mechanism files are in ..code:`data/inputs/`. 
+This release includes a modification of Cantera Version 2.3.0 (stable) to include the capability of linear quasi-steady-state approximation for gas-phase kinetics. One sample for the usage of linear-QSSA model is included in **samples/cxx/qss_ignition/**. The corresponding mechanism files are in **data/inputs/**. 
 
 This release is made for people who wish to use the linear-QSSA feature as is, before I have time to make proper modifications to close the `pull request #437 <https://github.com/Cantera/cantera/pull/437>`_.
 
