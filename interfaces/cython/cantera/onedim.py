@@ -31,6 +31,15 @@ class FlameBase(Sim1D):
         self.gas = gas
         self.flame.P = gas.P
 
+    def set_kin(self, kin):
+        """
+        Set the kinetics model for flame.
+
+        :param kin:
+            object to use to evaluate reaction rates, which can be different from the gas object
+        """
+        self.flame.set_kinetics(kin)
+
     def set_refine_criteria(self, ratio=10.0, slope=0.8, curve=0.8, prune=0.0):
         """
         Set the criteria used for grid refinement.
@@ -583,15 +592,11 @@ class CounterflowDiffusionFlame(FlameBase):
         super(CounterflowDiffusionFlame, self).__init__(
                 (self.fuel_inlet, self.flame, self.oxidizer_inlet), gas, grid)
 
-    def set_initial_guess(self, fuel=None, oxidizer=None, stoich=None):
+    def set_initial_guess(self):
         """
         Set the initial guess for the solution. The initial guess is generated
         by assuming infinitely-fast chemistry.
         """
-        if fuel is not None or oxidizer is not None or stoich is not None:
-            warnings.warn(
-                'Arguments to CounterflowDiffusionFlame.set_initial_guess are '
-                'unused and deprecated and will be removed after Cantera 2.3.')
 
         super(CounterflowDiffusionFlame, self).set_initial_guess()
 
