@@ -354,6 +354,10 @@ public:
      */
     PengRobinsonGasPhase(XML_Node& phaseRef, const std::string& id = "");
 
+    virtual std::string type() const {
+        return "PengRobinsonGas";
+    }
+
     //! @name Molar Thermodynamic Properties of the Solution
     //! @{
 
