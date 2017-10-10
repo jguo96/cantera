@@ -8,6 +8,8 @@
 #include "cantera/thermo/PengRobinsonGasPhase.h"
 #include "cantera/base/utilities.h"
 
+#include <iostream>
+
 using namespace std;
 
 namespace Cantera
@@ -125,7 +127,7 @@ void PengRobinsonGasPhase::getPartialMolarEnthalpies(doublereal* hbar) const
     doublereal temp = Am - temperature() * dAmdT;
     for (size_t k = 0; k < m_kk; k++) {
         if (IsCrit[k] == 0) continue;
-        hbar[k] -= rt + dK1dN[k] * temp +
+        hbar[k] += -rt + dK1dN[k] * temp +
                    K1 * (dAmdN[k] - temperature() * d2AmdTdN[k]) +
                    pressure() * dVdN[k];
         // hbar[k] = hbar0[k];
@@ -291,6 +293,7 @@ void PengRobinsonGasPhase::getStandardVolumes_ref(doublereal* vol) const
 
 doublereal PengRobinsonGasPhase::pressure() const
 {
+    _updateThermoRealFluid();
     return (GasConstant * temperature()) / (molarVolume() - Bm) -
            Am / (pow(molarVolume(), 2) + 2.0 * molarVolume() * Bm - pow(Bm, 2));
 }
@@ -303,6 +306,8 @@ void PengRobinsonGasPhase::setPressure(doublereal p)
     _updateThermoRealFluid();
     setDensity(meanMolecularWeight() /
                GetVolumeFromPressureTemperature(p, temperature()));
+    //SetRealFluidThermodynamics();
+    //printf("density = %g\n", density());
 }
 
 void PengRobinsonGasPhase::ReadCriticalProperties() const
@@ -390,6 +395,26 @@ void PengRobinsonGasPhase::ReadCriticalProperties() const
             sigma[k] = 0.0;
             dipole[k] = 0.0;
         } else if (speciesName(k) == "N2") {
+            IsCrit[k] = 1;
+            Tcrit[k] = 126.19;    // K
+            Pcrit[k] = 3.3958e+6; // Pa
+            Vcrit[k] = 89.41e-3; // m3/kmol
+            rhocrit[k] = molecularWeight(k) / Vcrit[k]; // kg/m3
+            Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
+            omega[k] = 0.0372;
+            sigma[k] = 0.0;
+            dipole[k] = 0.0;
+        } else if (speciesName(k) == "NC12H26") {
+            IsCrit[k] = 1;
+            Tcrit[k] = 658.10;    // K
+            Pcrit[k] = 1.817e+6; // Pa
+            Vcrit[k] = 751.8797e-3; // m3/kmol
+            rhocrit[k] = molecularWeight(k) / Vcrit[k]; // kg/m3
+            Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
+            omega[k] = 0.57639;
+            sigma[k] = 0.0;
+            dipole[k] = 0.0;
+        } else {
             IsCrit[k] = 0;
             Tcrit[k] = 126.19;    // K
             Pcrit[k] = 3.3958e+6; // Pa
@@ -399,9 +424,8 @@ void PengRobinsonGasPhase::ReadCriticalProperties() const
             omega[k] = 0.0372;
             sigma[k] = 0.0;
             dipole[k] = 0.0;
-        } else {
             cout << " Unknown or non-major species : " << speciesName(k)
-                 << ". All critical properties were set to zero." << endl;
+                 << ". All critical properties were set to N2 values with IsCrit 0." << endl;
         }
     }
 }
@@ -434,9 +458,15 @@ void PengRobinsonGasPhase::SetRealFluidConstants() const
 
         cst_b[k] = 0.077796 * GasConstant * Tcrit[k] / Pcrit[k];
         for (size_t l = 0; l < m_kk; l++) {
+            if (IsCrit[l] == 0) continue;
+
             int apos = k * m_kk + l;
             cst_a[apos] = 0.457236 * pow(GasConstant * Tcrit_IJ[apos], 2.0) / Pcrit_IJ[apos];
             cst_c[apos] = 0.37464 + 1.54226 * omega_IJ[apos] - 0.26992 * pow(omega_IJ[apos], 2);
+
+            cst_aa[apos] = cst_a[apos] * pow(cst_c[apos], 2) / Tcrit_IJ[apos];
+            cst_bb[apos] = cst_a[apos] * 2.0 * (cst_c[apos] + pow(cst_c[apos], 2)) / sqrt(Tcrit_IJ[apos]);
+            cst_cc[apos] = cst_a[apos] * (1.0 + 2.0 * cst_c[apos] + pow(cst_c[apos], 2));
         }
     }
 
@@ -485,6 +515,9 @@ void PengRobinsonGasPhase::SetRealFluidThermodynamics() const
     dPdT = GasConstant / (molarVolume() - Bm) - dAmdT / (pow(molarVolume(), 2) + 2.0 * molarVolume() * Bm - pow(Bm, 2));
     double arg = GasConstant * temperature() * (molarVolume() + Bm) * pow(((molarVolume()) / (molarVolume() - Bm) + Bm / (molarVolume() + Bm)), 2);
     dPdV = -GasConstant * temperature() / pow((molarVolume() - Bm), 2) * (1.0 - 2.0 * Am / arg);
+
+    //printf("rho = %g, V = %g, R = %g, T = %g, dPdV = %g\n", density(), molarVolume(), GasConstant, temperature(), dPdV);
+
     //expansivity = -(dPdT) / (molarVolume() * dPdV); //ideal gas: equal to 3.34E-3 (1/K)
     K1 = 1.0 / (sqrt(8.0) * Bm) * log((molarVolume() + (1 - sqrt(2.0)) * Bm) / (molarVolume() + (1 + sqrt(2.0)) * Bm));
 
@@ -496,6 +529,44 @@ void PengRobinsonGasPhase::SetRealFluidThermodynamics() const
         dVdN[k] = -dPdN[k] / dPdV;
         dK1dN[k] = 1.0 / temp * dVdN[k] - cst_b[k] / Bm * (K1 + molarVolume() / temp);
     }
+}
+
+doublereal PengRobinsonGasPhase::GetTemperatureFromPressureDensity_anal(
+    doublereal p_in, doublereal rho_in)
+{
+    double aa = 0.0;
+    double bb = 0.0;
+    double cc = 0.0;
+
+    Bm = 0.0;
+    for (size_t k = 0; k < m_kk; k++)
+        Bm += moleFraction(k) * cst_b[k];
+
+    // set rho (density should already been set)
+    //setDensity(rho_in);
+
+    for (size_t k = 0; k < m_kk; k++) {
+        for (size_t l = 0; l < m_kk; l++) {
+            int apos = k * m_kk + l;
+            double X_X = moleFraction(l) * moleFraction(k);
+            aa -= X_X * cst_aa[apos];
+            bb += X_X * cst_bb[apos];
+            cc -= X_X * cst_cc[apos];
+            //printf("k = %d, l = %d, X_X = %g, cst_aa = %g, cst_bb = %g, cst_cc = %g\n", k, l, X_X, cst_aa[apos], cst_bb[apos], cst_cc[apos]);
+        }
+    }
+    double tmp = 1.0 / (pow(molarVolume(), 2) + 2.0 * Bm * molarVolume() - pow(Bm, 2));
+    //printf("tmp = %g\n", tmp);
+    aa *= tmp;
+    bb *= tmp;
+    cc *= tmp;
+    aa += GasConstant / (molarVolume() - Bm);
+    cc -= p_in;
+
+    //printf("p_in = %g, rho_in = %g, v = %g, R = %g, Bm = %g\n", p_in, rho_in, molarVolume(), GasConstant, Bm);
+    //printf("aa = %g, bb = %g, cc = %g\n", aa, bb, cc);
+
+    return pow((-bb + sqrt(pow(bb, 2) - 4.0 * aa * cc)) / 2.0 / aa, 2);
 }
 
 doublereal PengRobinsonGasPhase::GetVolumeFromPressureTemperature(
@@ -625,15 +696,30 @@ void PengRobinsonGasPhase::initThermo()
     // read in critical properties (currently hard-coded)
     ReadCriticalProperties();
 
-    Tcrit_IJ.resize(m_kk*m_kk);
-    Pcrit_IJ.resize(m_kk*m_kk);
-    Vcrit_IJ.resize(m_kk*m_kk);
-    Zcrit_IJ.resize(m_kk*m_kk);
-    omega_IJ.resize(m_kk*m_kk);
+    Tcrit_IJ.resize(m_kk * m_kk);
+    Pcrit_IJ.resize(m_kk * m_kk);
+    Vcrit_IJ.resize(m_kk * m_kk);
+    Zcrit_IJ.resize(m_kk * m_kk);
+    omega_IJ.resize(m_kk * m_kk);
+    fill(Tcrit_IJ.begin(), Tcrit_IJ.end(), 0);
+    fill(Pcrit_IJ.begin(), Pcrit_IJ.end(), 0);
+    fill(Vcrit_IJ.begin(), Vcrit_IJ.end(), 0);
+    fill(Zcrit_IJ.begin(), Zcrit_IJ.end(), 0);
+    fill(omega_IJ.begin(), omega_IJ.end(), 0);
 
-    cst_a.resize(m_kk*m_kk);
+    cst_a.resize(m_kk * m_kk);
     cst_b.resize(m_kk);
-    cst_c.resize(m_kk*m_kk);
+    cst_c.resize(m_kk * m_kk);
+    fill(cst_a.begin(), cst_a.end(), 0);
+    fill(cst_b.begin(), cst_b.end(), 0);
+    fill(cst_c.begin(), cst_c.end(), 0);
+
+    cst_aa.resize(m_kk * m_kk);
+    cst_bb.resize(m_kk * m_kk);
+    cst_cc.resize(m_kk * m_kk);
+    fill(cst_aa.begin(), cst_aa.end(), 0);
+    fill(cst_bb.begin(), cst_bb.end(), 0);
+    fill(cst_cc.begin(), cst_cc.end(), 0);
 
     dPdN.resize(m_kk);
     dVdN.resize(m_kk);
