@@ -1,0 +1,26 @@
+{
+    "description": "Chemical kinetics, thermodynamics, and transport tool suite", 
+    "license": "other-open", 
+    "title": "Cantera with L-QSSA", 
+    "version": "v0.1", 
+    "upload_type": "software", 
+    "publication_date": "2017-11-21", 
+    "creators": [
+        {
+            "name": "Hao Wu"
+        }
+    ], 
+    "access_right": "open", 
+    "related_identifiers": [
+        {
+            "scheme": "url", 
+            "identifier": "https://github.com/haowu80s/cantera/tree/v0.1", 
+            "relation": "isSupplementTo"
+        }, 
+        {
+            "scheme": "doi", 
+            "identifier": "10.5281/zenodo.1064239", 
+            "relation": "isPartOf"
+        }
+    ]
+}
