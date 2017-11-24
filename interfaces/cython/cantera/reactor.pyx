@@ -200,7 +200,11 @@ cdef class Reactor(ReactorBase):
         self._kinetics = solution
         if solution.kinetics != NULL:
             self.reactor.setKineticsMgr(deref(solution.kinetics))
-
+    
+    def set_kin(self, _SolutionBase kin):
+        self._kinetics = kin
+        self.reactor.setKineticsMgr(deref(kin.kinetics))
+    
     property kinetics:
         """
         The `Kinetics` object used for calculating kinetic rates in
