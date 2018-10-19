@@ -12,6 +12,7 @@
 #include <vector>
 #include <mutex>
 #include <unordered_map>
+#include <functional>
 #include "cantera/base/ctexceptions.h"
 
 namespace Cantera
