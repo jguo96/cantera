@@ -609,10 +609,7 @@ doublereal PengRobinsonGasPhase::GetCubicRoots(doublereal a0, doublereal a1,
         signArg = (arg>0)?1.0:-1.0; 
         v       = signArg*pow(fabs(arg), 1.0/3.0);
         Z       = -a2/3.0 + u + v;
-        // printf ("single root %e of  %e %e %e \n",Z, a0, a1,a2);
-        //printf("Z+= %f\n", Z);
     } else if (fabs(Det) <= eps) {
-        printf ("double root \n");
         arg     = -q/2.0;
         signArg = (arg>0)?1.0:-1.0;
         u       = signArg*pow(fabs(arg), 1.0/3.0);
