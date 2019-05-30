@@ -13,8 +13,9 @@ using namespace std;
 namespace Cantera
 {
 
-StFlow::StFlow(IdealGasPhase* ph, size_t nsp, size_t points) :
-//StFlow::StFlow(ThermoPhase* ph, size_t nsp, size_t points) :
+// StFlow::StFlow(IdealGasPhase* ph, size_t nsp, size_t points) :
+// StFlow::StFlow(ThermoPhase* ph, size_t nsp, size_t points) :
+StFlow::StFlow(PengRobinsonGasPhase* ph, size_t nsp, size_t points) :
     Domain1D(nsp+c_offset_Y, points),
     m_press(-1.0),
     m_nsp(nsp),
@@ -931,8 +932,9 @@ void AxiStagnFlow::evalContinuity(size_t j, doublereal* x, doublereal* rsd,
     diag[index(c_offset_U, j)] = 0;
 }
 
-FreeFlame::FreeFlame(IdealGasPhase* ph, size_t nsp, size_t points) :
-//FreeFlame::FreeFlame(ThermoPhase* ph, size_t nsp, size_t points) :
+// FreeFlame::FreeFlame(IdealGasPhase* ph, size_t nsp, size_t points) :
+FreeFlame::FreeFlame(PengRobinsonGasPhase* ph, size_t nsp, size_t points) :
+// FreeFlame::FreeFlame(ThermoPhase* ph, size_t nsp, size_t points) :
     StFlow(ph, nsp, points),
     m_zfixed(Undef),
     m_tfixed(Undef)

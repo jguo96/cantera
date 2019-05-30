@@ -477,10 +477,16 @@ cdef CxxIdealGasPhase* getIdealGasPhase(ThermoPhase phase) except *:
         raise TypeError('ThermoPhase object is not an IdealGasPhase')
     return <CxxIdealGasPhase*>(phase.thermo)
 
+cdef CxxPengRobinsonGasPhase* getPengRobinsonGasPhase(ThermoPhase phase) except *:
+    if pystr(phase.thermo.type()) != "PengRobinsonGas":
+        raise TypeError('ThermoPhase object is not an PengRobinsonGasPhase')
+    return <CxxPengRobinsonGasPhase*>(phase.thermo)
+
 
 cdef class FreeFlow(_FlowBase):
     def __cinit__(self, _SolutionBase thermo, *args, **kwargs):
-        gas = getIdealGasPhase(thermo)
+        #gas = getIdealGasPhase(thermo)
+        gas = getPengRobinsonGasPhase(thermo)
         self.flow = <CxxStFlow*>(new CxxFreeFlame(gas, thermo.n_species, 2))
 
 
@@ -514,7 +520,8 @@ cdef class AxisymmetricStagnationFlow(_FlowBase):
     well as arbitrary variation of the transport properties.
     """
     def __cinit__(self, _SolutionBase thermo, *args, **kwargs):
-        gas = getIdealGasPhase(thermo)
+        #gas = getIdealGasPhase(thermo)
+        gas = getPengRobinsonGasPhase(thermo)
         self.flow = <CxxStFlow*>(new CxxAxiStagnFlow(gas, thermo.n_species, 2))
 
 

@@ -9,7 +9,8 @@
 #include "Domain1D.h"
 #include "cantera/base/Array.h"
 #include "cantera/thermo/IdealGasPhase.h"
-//#include "cantera/thermo/ThermoPhase.h"
+#include "cantera/thermo/ThermoPhase.h"
+#include "cantera/thermo/PengRobinsonGasPhase.h"
 #include "cantera/kinetics/Kinetics.h"
 
 namespace Cantera
@@ -45,8 +46,9 @@ public:
     //!     to evaluate all thermodynamic, kinetic, and transport properties.
     //! @param nsp Number of species.
     //! @param points Initial number of grid points
-    StFlow(IdealGasPhase* ph = 0, size_t nsp = 1, size_t points = 1);
-    //StFlow(ThermoPhase* ph = 0, size_t nsp = 1, size_t points = 1);
+    // StFlow(IdealGasPhase* ph = 0, size_t nsp = 1, size_t points = 1);
+    // StFlow(ThermoPhase* ph = 0, size_t nsp = 1, size_t points = 1);
+    StFlow(PengRobinsonGasPhase* ph = 0, size_t nsp = 1, size_t points = 1);
 
     //! @name Problem Specification
     //! @{
@@ -67,8 +69,9 @@ public:
      * Set the thermo manager. Note that the flow equations assume
      * the ideal gas equation.
      */
-    void setThermo(IdealGasPhase& th) {
-    //void setThermo(ThermoPhase& th) {
+    // void setThermo(IdealGasPhase& th) {
+    // void setThermo(ThermoPhase& th) {
+    void setThermo(PengRobinsonGasPhase& th) {
         m_thermo = &th;
     }
 
@@ -388,8 +391,9 @@ protected:
 
     size_t m_nsp;
 
-    IdealGasPhase* m_thermo;
-    //ThermoPhase* m_thermo;
+    // IdealGasPhase* m_thermo;
+    // ThermoPhase* m_thermo;
+    PengRobinsonGasPhase* m_thermo;
     Kinetics* m_kin;
     Transport* m_trans;
 
@@ -442,8 +446,9 @@ private:
 class AxiStagnFlow : public StFlow
 {
 public:
-    AxiStagnFlow(IdealGasPhase* ph = 0, size_t nsp = 1, size_t points = 1) :
-    //AxiStagnFlow(ThermoPhase* ph = 0, size_t nsp = 1, size_t points = 1) :
+    // AxiStagnFlow(IdealGasPhase* ph = 0, size_t nsp = 1, size_t points = 1) :
+    AxiStagnFlow(PengRobinsonGasPhase* ph = 0, size_t nsp = 1, size_t points = 1) :
+    // AxiStagnFlow(ThermoPhase* ph = 0, size_t nsp = 1, size_t points = 1) :
         StFlow(ph, nsp, points) {
         m_dovisc = true;
     }
@@ -465,8 +470,9 @@ public:
 class FreeFlame : public StFlow
 {
 public:
-    FreeFlame(IdealGasPhase* ph = 0, size_t nsp = 1, size_t points = 1);
-    //FreeFlame(ThermoPhase* ph = 0, size_t nsp = 1, size_t points = 1);
+    // FreeFlame(IdealGasPhase* ph = 0, size_t nsp = 1, size_t points = 1);
+    FreeFlame(PengRobinsonGasPhase* ph = 0, size_t nsp = 1, size_t points = 1);
+    // FreeFlame(ThermoPhase* ph = 0, size_t nsp = 1, size_t points = 1);
     virtual void evalRightBoundary(doublereal* x, doublereal* res,
                                    integer* diag, doublereal rdt);
     virtual void evalContinuity(size_t j, doublereal* x, doublereal* r,

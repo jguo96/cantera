@@ -368,7 +368,8 @@ extern "C" {
     int stflow_new(int iph, int ikin, int itr, int itype)
     {
         try {
-            IdealGasPhase& ph = ThermoCabinet::get<IdealGasPhase>(iph);
+            // IdealGasPhase& ph = ThermoCabinet::get<IdealGasPhase>(iph);
+            PengRobinsonGasPhase & ph = ThermoCabinet::get<PengRobinsonGasPhase>(iph);
             //ThermoPhase& ph = ThermoCabinet::get<ThermoPhase>(iph);
             if (itype == 1) {
                 AxiStagnFlow* x = new AxiStagnFlow(&ph, ph.nSpecies(), 2);

@@ -222,6 +222,9 @@ cdef extern from "cantera/thermo/ThermoPhase.h" namespace "Cantera":
 cdef extern from "cantera/thermo/IdealGasPhase.h":
     cdef cppclass CxxIdealGasPhase "Cantera::IdealGasPhase"
 
+cdef extern from "cantera/thermo/PengRobinsonGasPhase.h":
+    cdef cppclass CxxPengRobinsonGasPhase "Cantera::PengRobinsonGasPhase"
+
 
 cdef extern from "cantera/thermo/SurfPhase.h":
     cdef cppclass CxxSurfPhase "Cantera::SurfPhase":
@@ -669,7 +672,8 @@ cdef extern from "cantera/oneD/Inlet1D.h":
 
 cdef extern from "cantera/oneD/StFlow.h":
     cdef cppclass CxxStFlow "Cantera::StFlow":
-        CxxStFlow(CxxIdealGasPhase*, int, int)
+        #CxxStFlow(CxxIdealGasPhase*, int, int)
+        CxxStFlow(CxxPengRobinsonGasPhase*, int, int)
         void setKinetics(CxxKinetics&) except +translate_exception
         void setTransport(CxxTransport&, cbool) except +translate_exception
         void setTransport(CxxTransport&) except +translate_exception
@@ -686,10 +690,12 @@ cdef extern from "cantera/oneD/StFlow.h":
         cbool withSoret()
 
     cdef cppclass CxxFreeFlame "Cantera::FreeFlame":
-        CxxFreeFlame(CxxIdealGasPhase*, int, int)
+        #CxxFreeFlame(CxxIdealGasPhase*, int, int)
+        CxxFreeFlame(CxxPengRobinsonGasPhase*, int, int)
 
     cdef cppclass CxxAxiStagnFlow "Cantera::AxiStagnFlow":
-        CxxAxiStagnFlow(CxxIdealGasPhase*, int, int)
+        #CxxAxiStagnFlow(CxxIdealGasPhase*, int, int)
+        CxxAxiStagnFlow(CxxPengRobinsonGasPhase*, int, int)
 
 
 cdef extern from "cantera/oneD/Sim1D.h":
@@ -1053,6 +1059,7 @@ cdef np.ndarray get_reaction_array(Kinetics kin, kineticsMethod1d method)
 cdef np.ndarray get_transport_1d(Transport tran, transportMethod1d method)
 cdef np.ndarray get_transport_2d(Transport tran, transportMethod2d method)
 cdef CxxIdealGasPhase* getIdealGasPhase(ThermoPhase phase) except *
+cdef CxxPengRobinsonGasPhase* getPengRobinsonGasPhase(ThermoPhase phase) except *
 cdef wrapSpeciesThermo(shared_ptr[CxxSpeciesThermo] spthermo)
 cdef Reaction wrapReaction(shared_ptr[CxxReaction] reaction)
 
