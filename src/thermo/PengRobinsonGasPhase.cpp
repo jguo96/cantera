@@ -414,6 +414,26 @@ void PengRobinsonGasPhase::ReadCriticalProperties() const
             omega[k] = 0.57639;
             sigma[k] = 0.0;
             dipole[k] = 0.0;
+        } else if (speciesName(k) == "CH4") {
+            IsCrit[k] = 1;
+            Tcrit[k] = 190.564;    // K
+            Pcrit[k] = 4.5992e+6; // Pa
+            Vcrit[k] = 98.6291e-3; // m3/kmol
+            rhocrit[k] = molecularWeight(k) / Vcrit[k]; // kg/m3
+            Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
+            omega[k] = 0.01142;
+            sigma[k] = 0.0;
+            dipole[k] = 0.0;
+        } else if (speciesName(k) == "CO") {
+            IsCrit[k] = 1;
+            Tcrit[k] = 132.86;    // K
+            Pcrit[k] = 3.4935e+6; // Pa
+            Vcrit[k] = 92.1659e-3; // m3/kmol
+            rhocrit[k] = molecularWeight(k) / Vcrit[k]; // kg/m3
+            Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
+            omega[k] = 0.05;
+            sigma[k] = 0.0;
+            dipole[k] = 0.1;
         } else {
             IsCrit[k] = 0;
             Tcrit[k] = 126.19;    // K
