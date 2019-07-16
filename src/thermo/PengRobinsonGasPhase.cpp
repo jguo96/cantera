@@ -434,6 +434,36 @@ void PengRobinsonGasPhase::ReadCriticalProperties() const
             omega[k] = 0.05;
             sigma[k] = 0.0;
             dipole[k] = 0.1;
+        } else if (speciesName(k) == "CO2") {
+            IsCrit[k] = 1;
+            Tcrit[k] = 304.1282;    // K
+            Pcrit[k] = 7.3773e+6; // Pa
+            Vcrit[k] = 94.1185e-3; // m3/kmol
+            rhocrit[k] = molecularWeight(k) / Vcrit[k]; // kg/m3
+            Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
+            omega[k] = 0.22394;
+            sigma[k] = 0.0;
+            dipole[k] = 0.0;
+        } else if (speciesName(k) == "C2H6") {
+            IsCrit[k] = 1;
+            Tcrit[k] = 305.33;    // K
+            Pcrit[k] = 	4.8718e+6; // Pa
+            Vcrit[k] = 145.5604e-3; // m3/kmol
+            rhocrit[k] = molecularWeight(k) / Vcrit[k]; // kg/m3
+            Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
+            omega[k] = 0.0993;
+            sigma[k] = 0.0;
+            dipole[k] = 0.0;
+        } else if (speciesName(k) == "C2H4") {
+            IsCrit[k] = 1;
+            Tcrit[k] = 282.35;    // K
+            Pcrit[k] = 	5.0418e+6; // Pa
+            Vcrit[k] = 130.9414e-3; // m3/kmol
+            rhocrit[k] = molecularWeight(k) / Vcrit[k]; // kg/m3
+            Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
+            omega[k] = 0.0866;
+            sigma[k] = 0.0;
+            dipole[k] = 0.0;
         } else {
             IsCrit[k] = 0;
             Tcrit[k] = 126.19;    // K
