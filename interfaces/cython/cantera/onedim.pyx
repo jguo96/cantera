@@ -473,8 +473,8 @@ cdef class _FlowBase(Domain1D):
 
 
 cdef CxxIdealGasPhase* getIdealGasPhase(ThermoPhase phase) except *:
-    if pystr(phase.thermo.type()) != "IdealGas":
-        raise TypeError('ThermoPhase object is not an IdealGasPhase')
+    if pystr(phase.thermo.type()) != "IdealGas" and pystr(phase.thermo.type()) != "PengRobinsonGas":
+        raise TypeError('ThermoPhase object is not an IdealGasPhase or PengRobinsonGasPhase')
     return <CxxIdealGasPhase*>(phase.thermo)
 
 
