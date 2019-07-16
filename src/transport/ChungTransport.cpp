@@ -128,7 +128,6 @@ void ChungTransport::ReadCriticalProperties()
             Vcrit[k] = 98.6291e-3; // m3/kmol
             Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
             omega[k] = 0.01142;
-            sigma[k] = 0.0;
             dipole[k] = 0.0;
             kappa[k] = 0.0;
         } else if (m_thermo->speciesName(k) == "CO") {
@@ -138,7 +137,6 @@ void ChungTransport::ReadCriticalProperties()
             Vcrit[k] = 92.1659e-3; // m3/kmol
             Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
             omega[k] = 0.05;
-            sigma[k] = 0.0;
             dipole[k] = 0.1;
             kappa[k] = 0.0;
         } else if (m_thermo->speciesName(k) == "CO2") {
@@ -148,7 +146,6 @@ void ChungTransport::ReadCriticalProperties()
             Vcrit[k] = 94.1185e-3; // m3/kmol
             Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
             omega[k] = 0.22394;
-            sigma[k] = 0.0;
             dipole[k] = 0.0;
             kappa[k] = 0.0;
         } else if (m_thermo->speciesName(k) == "C2H6") {
@@ -158,7 +155,6 @@ void ChungTransport::ReadCriticalProperties()
             Vcrit[k] = 145.5604e-3; // m3/kmol
             Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
             omega[k] = 0.0993;
-            sigma[k] = 0.0;
             dipole[k] = 0.0;
             kappa[k] = 0.0;
         } else if (m_thermo->speciesName(k) == "C2H4") {
@@ -168,7 +164,6 @@ void ChungTransport::ReadCriticalProperties()
             Vcrit[k] = 130.9414e-3; // m3/kmol
             Zcrit[k] = (Pcrit[k] * Vcrit[k]) / (GasConstant * Tcrit[k]);
             omega[k] = 0.0866;
-            sigma[k] = 0.0;
             dipole[k] = 0.0;
             kappa[k] = 0.0;
         } else {
