@@ -486,6 +486,15 @@ void GasQSSKinetics::calc_conc_QSS(doublereal* conc_qss)
     m_QSS_ok = true;
 }
 
+void GasQSSKinetics::getConcQSS(doublereal* conc_qss){
+    Map<VectorXd>(conc_qss, m_nSpeciesQSS) = 
+         Map<const VectorXd>(m_conc.data() + m_start[1], m_nSpeciesQSS);
+    // this is hopefully faster than the corresponding for-loop:
+//    for (int i = 0; i < m_nSpeciesQSS; i++){
+//        conc_qss[i] = m_conc[i + m_start[1]];
+//    }
+}
+
 void GasQSSKinetics::update_ROP_QSS(const doublereal* conc_qss)
 {
     for (size_t i = 0; i < m_nSpeciesQSS; i++) {
