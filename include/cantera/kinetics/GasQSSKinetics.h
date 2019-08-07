@@ -86,6 +86,9 @@ public:
 
     //! Calculate concentration for QSS species
     virtual void calc_conc_QSS(doublereal* conc_qss);
+    
+    //! Get concentration for QSS species
+    virtual void getConcQSS(doublereal* conc_qss);
 
     //! Update rate for QSS
     virtual void update_ROP_QSS(const doublereal* conc_qss);
