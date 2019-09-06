@@ -8,7 +8,7 @@ export SUN_LIB=$UTILITIES_ROOT/Sundials/sundials-2.7.0/lib
 export BOOST_DIR=$UTILITIES_ROOT/boost/1.55.0
 
 scons -j20 build prefix=$CANTERA_DIR \
-  CXX=CC CC=cc FORTRAN=ftn python_package=none \
+  CXX=CC CC=cc FORTRAN=ftn python_package=none python3_package='n'\
   optimize_flags='-O3' \
   thread_flags='' \
   warning_flags='-Wall' \
